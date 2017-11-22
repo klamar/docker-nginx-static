@@ -1,0 +1,26 @@
+version: '3'
+services:
+  nginx:
+    container_name: klamar_nginx_static
+    build:
+      context: .
+    image: klamar/nginx-static:0.2
+    volumes:
+    - ./test:/data
+    - ./nginx:/etc/nginx
+    ports:
+    - 1080:80
+
+
+  lb:
+    image: million12/haproxy:1.6.3-h2
+    restart: always
+    links:
+    - nginx
+    container_name: lb
+    restart: always
+    volumes:
+    - ./haproxy:/etc/haproxy
+    - /etc/ssl:/etc/ssl
+    ports:
+    - 1443:443
